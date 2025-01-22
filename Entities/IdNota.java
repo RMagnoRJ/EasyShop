@@ -1,6 +1,6 @@
 package Classes.EasyShop.Entities;
 
-import Classes.EasyCalc.Services.GeneralFunctions;
+import Classes.EasyShop.Services.GeneralFunctions;
 
 public class IdNota {
     

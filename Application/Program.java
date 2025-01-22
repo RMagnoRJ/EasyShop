@@ -2,8 +2,6 @@ package Classes.EasyShop.Application;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Scanner;
 
 import Classes.EasyShop.Entities.Cpf;
 import Classes.EasyShop.Entities.IdNota;
@@ -14,24 +12,17 @@ import Classes.EasyShop.Entities.PayInfo;
 import Classes.EasyShop.Enum.PaymentMode;
 import Classes.EasyShop.Services.GeneralFunctions;
 
-
-
-
-
 public class Program {
     
-    @SuppressWarnings("unlikely-arg-type")
     public static void main(String[] args) {
-        
-        // Recapitulação seção 16 - Interfaces
 
         System.out.println();
         System.out.println();
         System.out.println();
         System.out.println("\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*");
-        System.out.println(  "                    EASY CALC v 1.0                  ");
+        System.out.println(  "                    EASY SHOP v 2.0                  ");
         System.out.println(  "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n\n");
-        Scanner inn = new Scanner (System.in);
+
         MasterAdm arquivoGeral = new MasterAdm();
         GeneralFunctions function = new GeneralFunctions();
         String operador;
@@ -178,94 +169,39 @@ public class Program {
                 break;
 
                 case 2:
-                    // BUSCA DE NOTA FISCAL PELO CPF, ou, DATA
+                    // BUSCA DE NOTA FISCAL PELO CPF, DATA, ou, VALOR
                     int busca=0;
-                    while (busca < 3){
+                    while (busca <= 3){
                         System.out.println("\n\t*-*-*-*");
                         System.out.println(  "\t BUSCA ");
                         System.out.println(  "\t*-*-*-*\n");
                         System.out.print("Realizar busca por:\n" +
-                        "[1] CPF\n"+
+                        "\n[1] CPF\n"+
                         "[2] Data\n"+
                         "[3] Valor da nota\n"+
                         "[4] Voltar ao menu\n");
-                        busca = function.recebeIntMinMaxVariavel("> ", 1, 4);
-                        boolean localizado = false;
+                        busca = function.recebeIntMinMaxVariavel("\n> ", 1, 4);
 
                         if (busca == 1){
                             System.out.print("\nDigite o CPF (XXXXXXXXX-xx): ");
-                            String buscaCpf = function.checkStringLength(11);
-    
-                            for (int i = 0; i < arquivoGeral.getArquivoGeral().size(); i++){
-    
-                                if (arquivoGeral.getArquivoGeral().get(i).getCpf().getCpf().equals(buscaCpf)) {
-                                    arquivoGeral.getArquivoGeral().get(i).geraNota();
-                                    localizado = true;
-                                } else if (arquivoGeral.getArquivoGeral().get(i).getCpf().getCpf().charAt(0) == buscaCpf.charAt(0)){
-                                    if(arquivoGeral.getArquivoGeral().get(i).getCpf().getCpf().charAt(1) == buscaCpf.charAt(1)){
-                                        if(arquivoGeral.getArquivoGeral().get(i).getCpf().getCpf().charAt(2) == buscaCpf.charAt(2)){
-                                            if(arquivoGeral.getArquivoGeral().get(i).getCpf().getCpf().charAt(3) == buscaCpf.charAt(3)){
-                                                if(arquivoGeral.getArquivoGeral().get(i).getCpf().getCpf().charAt(4) == buscaCpf.charAt(4)){
-                                                    if(arquivoGeral.getArquivoGeral().get(i).getCpf().getCpf().charAt(5) == buscaCpf.charAt(5)){
-                                                        if(arquivoGeral.getArquivoGeral().get(i).getCpf().getCpf().charAt(6) == buscaCpf.charAt(6)){
-                                                            if(arquivoGeral.getArquivoGeral().get(i).getCpf().getCpf().charAt(7) == buscaCpf.charAt(7)){
-                                                                if(arquivoGeral.getArquivoGeral().get(i).getCpf().getCpf().charAt(8) == buscaCpf.charAt(8)){
-                                                                    arquivoGeral.getArquivoGeral().get(i).geraNota();
-                                                                    localizado = true;
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                } 
-                            }
-                            if (localizado == false){
-                                System.out.println("\n# CPF NÃO LOCALIZADO #\n");
-                            }
+                            String findCpf = function.checkStringLength(11);
+                            arquivoGeral.buscaPorCpf(findCpf);
+                            
                         } else if (busca == 2) {
                             System.out.println("\nPreencha os campos abaixo: \n");
-                            System.out.print("DIA: ");
+                            System.out.print("DIA (1 a 31): ");
                             int dia = function.recebeIntMinMax(1, 31);
-                            System.out.print("\nMES: ");
+                            System.out.print("\nMES (1 a 12): ");
                             int mes = function.recebeIntMinMax(1, 12);
-                            System.out.print("\nANO: ");
-                            int ano = function.recebeInt();
+                            System.out.print("\nANO (XXXX): ");
+                            int ano = function.recebeIntMinMax(2024,2999);
                             LocalDate buscaData = LocalDate.of(ano, mes, dia);
-                            localizado = false;
-                            for (int i = 0; i < arquivoGeral.getArquivoGeral().size(); i++){
-    
-                                if (arquivoGeral.getArquivoGeral().get(i).getDataDaCompra().equals(buscaData)) {
-                                    arquivoGeral.getArquivoGeral().get(i).geraNota();
-                                    localizado = true;
-                                } 
-                            }
-                            if (localizado == false){
-                                System.out.println("\n# REGISTRO NÃO LOCALIZADO #\n");
-                            }
+                            arquivoGeral.buscaPorData(buscaData);
+
                         } else if (busca == 3){
-                            System.out.print("\nDigite o valor da nota: R$ ");
-                            double valor = function.recebeDoubleVariavel("R$ ");
-                            localizado = false;
-                            for (int i = 0; i < arquivoGeral.getArquivoGeral().size(); i++){
-    
-                                if (arquivoGeral.getArquivoGeral().get(i).getPayment().getValorComDescontoOuTaxa() == valor) {
-                                    arquivoGeral.getArquivoGeral().get(i).geraNota();
-                                    System.out.println("\n|  [ 1 ] ENCERRAR  |  PRÓXIMA [ 2 ]  |");
-                                    System.out.print("[  ] ");
-                                    int proxima = function.recebeIntMinMax(1, 2);
-                                    if (proxima == 1) {
-                                        i = arquivoGeral.getArquivoGeral().size();
-                                        localizado = true;
-                                    }
-                                    System.out.println("\n"); 
-                                } 
-                            }
-                            if (localizado == false){
-                                System.out.println("\n# REGISTRO NÃO LOCALIZADO #\n");
-                            }
+                            System.out.print("\nDigite o valor da nota: ");
+                            double buscaValor = function.recebeDoubleVariavel("R$ ");
+                            arquivoGeral.buscaPorValor(buscaValor);
                         } 
                     }
                     break;
@@ -275,42 +211,18 @@ public class Program {
                     System.out.println("\n\t        *-*-*-*-*-*-*-*");
                     System.out.println(  "\t         ARQUIVO GERAL ");
                     System.out.println(  "\t        *-*-*-*-*-*-*-*\n");
-                    int proxima;
-                    for (int i = 0; i < arquivoGeral.getArquivoGeral().size(); i++){
-    
-                        arquivoGeral.getArquivoGeral().get(i).geraNota();
-
-                        System.out.println("\n         |  [ 1 ] SAIR  |  PRÓXIMA [ 2 ]  |");
-                        System.out.print("\n         >>> ");
-                        proxima = function.recebeIntMinMax(1, 2);
-                        if (proxima == 1) {
-                            i = arquivoGeral.getArquivoGeral().size();
-                        }
-                        System.out.println("\n"); 
-                    }
+                    arquivoGeral.arquivoGeralDeNotas();
                     break;
 
                 case 4:
                     // FECHAMENTO DE VENDAS
                     System.out.println("\n\t*-*-*-*-*-*-*-*");
-                    System.out.println(  "\t FECHAMENTO ");
+                    System.out.println(  "\t   FECHAMENTO  ");
                     System.out.println(  "\t*-*-*-*-*-*-*-*\n");
-                    double vendasDoDia=0.0;
-                    DateTimeFormatter novaData = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                    System.out.println("\n---------------------------------");
-                    for (int i = 0; i < arquivoGeral.getArquivoGeral().size(); i++){
 
-                        System.out.print("| DATA: ");
-                        arquivoGeral.getArquivoGeral().get(i).getDataDaCompra().format(novaData);
-                        System.out.print(" | Valor (R$) ");
-                        arquivoGeral.getArquivoGeral().get(i).getPayment().getValorComDescontoOuTaxa();
-                        System.out.println(" |");
-                        vendasDoDia = vendasDoDia + arquivoGeral.getArquivoGeral().get(i).getPayment().getValorComDescontoOuTaxa();
-                    }
-                    System.out.println("---------------------------------");
-                    System.out.printf("Total recebido R$ %.2f", vendasDoDia);
-                    System.out.println("---------------------------------\n");
+                    arquivoGeral.fechaCaixa();
                     function.PressToContinue();
+
                     break;
 
                 case 5:
@@ -325,6 +237,6 @@ public class Program {
         System.out.println("\n\t*-*-*-*-*-*-*");
         System.out.println(  "\t  ENCERRADO  ");
         System.out.println(  "\t*-*-*-*-*-*-*\n");
-        inn.close();
+
     }
 }

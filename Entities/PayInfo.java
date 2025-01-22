@@ -44,7 +44,7 @@ public class PayInfo {
 
         this.valorComDescontoOuTaxa = metodoDePagamento.payMethod(getValorDaCompra());
         this.aviso = metodoDePagamento.geraAviso();
-        this.descontoTaxa = metodoDePagamento.geraTaxa();
+        this.descontoTaxa = valorDaCompra * metodoDePagamento.geraTaxa();
 
     }
 
